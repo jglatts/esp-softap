@@ -61,7 +61,6 @@ void connect_to_server() {
   
   client_send(&client);
   Serial.print(read_response(&client));
-  client_send(&client);
 }
 
 /**

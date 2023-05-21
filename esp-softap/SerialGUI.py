@@ -22,7 +22,7 @@ class WinSer():
         num_tests (int, optional): number of tests to compute. Defaults to 0.
         baud (int, optional): baud rate of the device. Defaults to 9600.
     """
-    def __init__(self, write_out=True, port=9, num_tests=0, baud=115200):
+    def __init__(self, write_out=False, port=9, num_tests=0, baud=115200):
         self.port = port
         self.num_tests = num_tests
         self.baud = baud
