@@ -12,6 +12,8 @@
 #include "Arduino.h"
 #include <WiFi.h>
 
+#define err_loop() while (1) { } 
+
 #define ssid     "ssid"
 #define pw       "pw"
 #define ap_ssid  "my-ap-net"

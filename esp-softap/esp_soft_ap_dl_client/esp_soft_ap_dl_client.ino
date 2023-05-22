@@ -25,5 +25,5 @@ void setup() {
  * @brief Main program loop 
  */
 void loop() {
-    logger.connect_to_server();
+    logger.run();
 }

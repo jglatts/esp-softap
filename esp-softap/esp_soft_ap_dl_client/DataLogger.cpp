@@ -1,9 +1,16 @@
+/**
+ * @file DataLogger.h
+ * 
+ * @author John Glatts
+ * @version 0.1
+ * @date 2023-05-21
+ */
 #include "DataLogger.h"
 
 /**
  * @brief DatalLogger constructor
  */
-DataLogger::DataLogger() {
+DataLogger::DataLogger(): client{nullptr} {
     send_count = 0;
     for (int i = 0; i < max; i++)
         sensor_data[i] = 0;
@@ -12,7 +19,7 @@ DataLogger::DataLogger() {
 /**
  * @brief Check for a timeout from the server  
  */
-bool DataLogger::server_time_out(WiFiClient* client) {
+bool DataLogger::server_time_out() {
   unsigned long start = millis();
 
   while (!client->available()) {
@@ -29,10 +36,10 @@ bool DataLogger::server_time_out(WiFiClient* client) {
 /**
  * @brief Read and and return response from server 
  */
-String DataLogger::read_response(WiFiClient* client) {
+String DataLogger::read_response() {
   String line;
 
-  if (server_time_out(client))
+  if (server_time_out())
     return "";
 
   while(client->available()) {
@@ -46,21 +53,16 @@ String DataLogger::read_response(WiFiClient* client) {
  * @brief Connect and get the response from server
  */
 void DataLogger::connect_to_server() {
-  WiFiClient client;
-
-  if (!client.connect(host, port)) {
+  if (!client->connect(host, port)) {
     Serial.println("Couldnt connect to server");
     return;
   }
-  
-  client_send(&client);
-  Serial.print(read_response(&client));
 }
 
 /**
  * @brief Send data from client to server
  */
-void DataLogger::client_send(WiFiClient* client) {
+void DataLogger::client_send() {
   client->print("I LOVE MY STINKY\n");
   client->print("count\n");
   client->print(send_count++);
@@ -69,7 +71,36 @@ void DataLogger::client_send(WiFiClient* client) {
 }
 
 /**
- * @brief Init ESP client wifi device as a station
+ * @brief Main Datalogger function to collect data and send to server
+ */
+void DataLogger::run() {
+  WiFiClient c;
+  client = &c;
+  connect_to_server();
+  collect_data();
+  client_send();
+  Serial.println(read_response());
+  //send_server_data();
+}
+
+/**
+ * @brief Send data to the server 
+ */
+void DataLogger::send_server_data() {
+
+}
+
+/**
+ * @brief Send data from client to server
+ */
+void DataLogger::collect_data() {
+  for (int i = 0; i < max; i++) {
+    // collect some sensor data to send 
+  }
+}
+
+/**
+ * @brief Init  ESP client wifi device as a station
  */
 bool DataLogger::init_wifi(int num_times) {
   int i;

@@ -1,3 +1,10 @@
+/**
+ * @file DataLogger.h
+ * 
+ * @author John Glatts
+ * @version 0.1
+ * @date 2023-05-21
+ */
 #ifndef __DATA_LOGGER__H__
 #define __DATA_LOGGER_H__
 
@@ -11,18 +18,20 @@
 #define max      10
 
 struct DataLogger {
-
 public:
     DataLogger();
     bool init_wifi(int);
-    String read_response(WiFiClient*);
+    void run();
+    String read_response();
     void connect_to_server();
 private:
-    void client_send(WiFiClient*); 
-    bool server_time_out(WiFiClient*);
+    void collect_data();
+    void client_send(); 
+    void send_server_data();
+    bool server_time_out();
     long int send_count;
     int sensor_data[10];
-
+    WiFiClient* client;
 };
 
 #endif // __DATA_LOGGER_H__
