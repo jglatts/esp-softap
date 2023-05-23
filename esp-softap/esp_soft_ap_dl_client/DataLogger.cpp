@@ -12,6 +12,7 @@
  */
 DataLogger::DataLogger(): client{nullptr} {
     send_count = 0;
+    has_client = false;
     for (int i = 0; i < max; i++)
         sensor_data[i] = 0;
 }
@@ -22,6 +23,7 @@ DataLogger::DataLogger(): client{nullptr} {
 bool DataLogger::server_time_out() {
   unsigned long start = millis();
 
+  if (!has_client) return false;  
   while (!client->available()) {
     if (millis() - start > 5000) {
         Serial.println("Time out from server!\n");
@@ -39,6 +41,7 @@ bool DataLogger::server_time_out() {
 String DataLogger::read_response() {
   String line;
 
+  if (!has_client) return "";  
   if (server_time_out())
     return "";
 
@@ -57,12 +60,14 @@ void DataLogger::connect_to_server() {
     Serial.println("Couldnt connect to server");
     return;
   }
+  has_client = true;
 }
 
 /**
  * @brief Send data from client to server
  */
 void DataLogger::client_send() {
+  if (!has_client) return;  
   client->print("I LOVE MY STINKY\n");
   client->print("count\n");
   client->print(send_count++);

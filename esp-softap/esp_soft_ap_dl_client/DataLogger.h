@@ -11,6 +11,8 @@
 #include "Arduino.h"
 #include <WiFi.h>
 
+#define err_loop() while(1);
+
 #define ap_ssid  "my-ap-net"
 #define ap_pw    "my-ap-net-super-pw"
 #define host     "192.168.4.1"
@@ -31,6 +33,7 @@ private:
     bool server_time_out();
     long int send_count;
     int sensor_data[10];
+    bool has_client;
     WiFiClient* client;
 };
 

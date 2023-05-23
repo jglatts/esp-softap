@@ -17,7 +17,7 @@ DataLogger logger;
 void setup() {
   Serial.begin(115200);
   if (!logger.init_wifi(1000)) {
-    while (1); // NOP
+    err_loop();
   }
 }
 
