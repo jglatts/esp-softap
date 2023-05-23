@@ -70,7 +70,8 @@ class WinSer():
         else:
             while (1):
                 test_str = self.get_test_str()
-                print(test_str)
+                if (len(test_str) > 0):
+                    print(test_str)
     
     
     """

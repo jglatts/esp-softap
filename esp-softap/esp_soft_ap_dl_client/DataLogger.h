@@ -33,7 +33,6 @@ private:
     bool server_time_out();
     long int send_count;
     int sensor_data[10];
-    bool has_client;
     WiFiClient* client;
 };
 

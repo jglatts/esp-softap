@@ -25,10 +25,12 @@ struct WifiUtil {
 public:
     static bool init_wifi(int);
     static bool init_soft_ap();
-    static bool eval_line(String*);
-    static void check_found(bool*, String);
     static String handle_client(WiFiServer*);
-    static void client_send_http(WiFiClient*, bool);
+private:
+    static void check_response(String, WiFiClient*);
+    static void client_send_http(WiFiClient*);
+    static void check_found(bool*, String);
+    static bool eval_line(String*);
 };
 
 #endif //__MYWIFI__H__
