@@ -60,16 +60,12 @@ String WifiUtil::handle_client(WiFiServer* server) {
     while (client.connected()) {
       if (client.available()) {
         char c = client.read();   
-        if (c == '\r')
-          continue;
+        if (c == '\r') continue;
         else if (c == '\n' && old_c == '\n') {
-          for (int i = 0; i < 100; i++) {
-            client.println("HELLO FROM SERVER");
-          }
+          check_response(current_line, &client);
           break;
         } 
-        else 
-          current_line += c;
+        else current_line += c;
         old_c = c;
         check_found(&found, current_line);
       }
@@ -81,20 +77,31 @@ String WifiUtil::handle_client(WiFiServer* server) {
 }  
 
 /**
+ * @brief Check the response sent from client
+ *        Could either be a HTTP request or a Datalogger (ESP) request 
+ */
+void WifiUtil::check_response(String line, WiFiClient* client) {
+  if (line.indexOf("GET") >= 0) {
+    // HTTP request
+    client_send_http(client);
+  }
+  else {
+    // Datalogger request 
+    for (int i = 0; i < 100; i++) {
+      client->println("HELLO FROM SERVER");
+    }
+  }
+}
+
+/**
  * @brief Send a example HTTP response to a client 
  */
-void WifiUtil::client_send_http(WiFiClient* client, bool found) {
+void WifiUtil::client_send_http(WiFiClient* client) {
   client->println("HTTP/1.1 200 OK");
   client->println("Content-type:text/html");
   client->println();
-  if (!found) {
-    client->print("Hello World<br>");
-    client->print("Click <a href=\"/H\">Here</a><br>");
-  }
-  else {
-    client->print("Thanks for clicking!");
-    client->print("Click <a href=\"/B\">Here</a> To Go Back<br>");
-  }
+  client->print("Hello World<br>");
+  client->print("Click <a href=\"/H\">Here</a><br>");
 }
 
 /**
